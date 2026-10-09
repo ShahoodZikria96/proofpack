@@ -2,6 +2,28 @@
 
 Turn receipts, chats, delivery evidence and refund attempts into one clear dispute evidence pack.
 
+## Implementation (Phase 1 MVP)
+
+The [`app/`](./app) directory contains a working, local-first build of the Phase 1 MVP described in this
+blueprint: upload evidence, manually categorize and label exhibits, build a timeline, and export a single
+PDF evidence pack. No OCR, payments, or cloud storage yet — that's Phase 2/3 per the build guidance below.
+
+- **Stack:** Next.js (App Router) + TypeScript + Tailwind CSS, no external accounts required to run it.
+- **Storage:** case data and uploaded files are kept locally under `app/.data/` (gitignored, never
+  committed).
+- **PDF export:** `@react-pdf/renderer` builds the cover/summary/timeline/index pages; `pdf-lib` embeds
+  image exhibits and merges in original PDF evidence pages, then stamps page numbers across the whole pack.
+
+To run it:
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
+
 ## Product Concept
 
 | | |

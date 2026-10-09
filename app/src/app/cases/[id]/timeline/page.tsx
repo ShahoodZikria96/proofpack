@@ -1,0 +1,161 @@
+"use client";
+
+import { use, useCallback, useEffect, useState } from "react";
+import type { CaseWithDetails } from "@/lib/types";
+
+export default function TimelinePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const [details, setDetails] = useState<CaseWithDetails | null>(null);
+  const [date, setDate] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [evidenceIds, setEvidenceIds] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+
+  const refresh = useCallback(async () => {
+    const res = await fetch(`/api/cases/${id}`, { cache: "no-store" });
+    if (res.ok) setDetails(await res.json());
+  }, [id]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load on mount
+    refresh();
+  }, [refresh]);
+
+  async function addEvent(e: React.FormEvent) {
+    e.preventDefault();
+    if (!date || !title) return;
+    setSubmitting(true);
+    await fetch(`/api/cases/${id}/timeline`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date, title, description, evidenceIds }),
+    });
+    setDate("");
+    setTitle("");
+    setDescription("");
+    setEvidenceIds([]);
+    setSubmitting(false);
+    await refresh();
+  }
+
+  async function removeEvent(eventId: string) {
+    await fetch(`/api/cases/${id}/timeline/${eventId}`, { method: "DELETE" });
+    await refresh();
+  }
+
+  if (!details) return <p className="text-sm text-slate-500">Loading...</p>;
+
+  return (
+    <div>
+      <h2 className="text-lg font-semibold text-slate-900">Build your timeline</h2>
+      <p className="mt-1 text-sm text-slate-600">
+        Add each key event in order — when you ordered, when you reached out, when things went wrong — and link the
+        exhibits that prove it.
+      </p>
+
+      <form onSubmit={addEvent} className="mt-6 space-y-3 rounded-lg border border-slate-200 p-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-medium text-slate-500">Date</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+              required
+            />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-slate-500">Event title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Placed order"
+              className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs font-medium text-slate-500">Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={2}
+            placeholder="What happened, in your own words"
+            className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+          />
+        </div>
+
+        {details.evidence.length > 0 && (
+          <div>
+            <label className="text-xs font-medium text-slate-500">Linked exhibits</label>
+            <div className="mt-1 flex flex-wrap gap-2">
+              {details.evidence.map((ev) => {
+                const selected = evidenceIds.includes(ev.id);
+                return (
+                  <button
+                    type="button"
+                    key={ev.id}
+                    onClick={() =>
+                      setEvidenceIds((prev) =>
+                        selected ? prev.filter((x) => x !== ev.id) : [...prev, ev.id]
+                      )
+                    }
+                    className={`rounded-full border px-2.5 py-1 text-xs ${
+                      selected
+                        ? "border-slate-900 bg-slate-900 text-white"
+                        : "border-slate-300 text-slate-600 hover:border-slate-400"
+                    }`}
+                  >
+                    Exhibit {ev.exhibitLabel}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+        >
+          Add event
+        </button>
+      </form>
+
+      <ul className="mt-8 space-y-3">
+        {details.timeline.length === 0 ? (
+          <p className="text-sm text-slate-400">No events yet.</p>
+        ) : (
+          details.timeline.map((event) => {
+            const labels = event.evidenceIds
+              .map((eid) => details.evidence.find((e) => e.id === eid)?.exhibitLabel)
+              .filter(Boolean);
+            return (
+              <li key={event.id} className="flex items-start justify-between gap-4 rounded-lg border border-slate-200 p-4">
+                <div>
+                  <p className="text-xs font-medium text-slate-400">{event.date}</p>
+                  <p className="font-medium text-slate-900">{event.title}</p>
+                  {event.description && <p className="mt-1 text-sm text-slate-600">{event.description}</p>}
+                  {labels.length > 0 && (
+                    <p className="mt-1 text-xs text-slate-500">Exhibits: {labels.join(", ")}</p>
+                  )}
+                </div>
+                <button
+                  onClick={() => removeEvent(event.id)}
+                  className="shrink-0 text-xs font-medium text-red-600 hover:text-red-700"
+                >
+                  Remove
+                </button>
+              </li>
+            );
+          })
+        )}
+      </ul>
+    </div>
+  );
+}
