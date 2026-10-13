@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { DISPUTE_TYPES, type DisputeType } from "@/lib/types";
+import { COUNTRIES } from "@/lib/countries";
+import { CURRENCIES } from "@/lib/currencies";
 
 export default function NewCasePage() {
   const router = useRouter();
@@ -96,12 +98,18 @@ export default function NewCasePage() {
             <p className="mt-0.5 text-xs text-slate-500">
               Where you or the merchant are based — helps if you submit this abroad. Optional.
             </p>
-            <input
+            <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              placeholder="e.g. Pakistan, United States, United Kingdom"
               className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-            />
+            >
+              <option value="">Select a country (optional)</option>
+              {COUNTRIES.map((c) => (
+                <option key={c.code} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -120,13 +128,18 @@ export default function NewCasePage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700">Currency</label>
-              <p className="mt-0.5 text-xs text-slate-500">3-letter code, e.g. USD, PKR, EUR.</p>
-              <input
+              <p className="mt-0.5 text-xs text-slate-500">The currency you were charged in.</p>
+              <select
                 value={currency}
-                onChange={(e) => setCurrency(e.target.value.toUpperCase())}
-                maxLength={3}
-                className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm uppercase focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-              />
+                onChange={(e) => setCurrency(e.target.value)}
+                className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              >
+                {CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.code} — {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700">Transaction amount</label>
