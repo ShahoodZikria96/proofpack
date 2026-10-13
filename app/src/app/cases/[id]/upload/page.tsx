@@ -35,9 +35,11 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
     if (res.ok) {
       const data = await res.json();
       if (data.skipped?.length) {
-        setMessage(`Added ${data.evidence.length} file(s). Skipped unsupported or oversized: ${data.skipped.join(", ")}`);
+        setMessage(
+          `Added ${data.evidence.length} file(s) with auto-filled captions and timeline entries. Skipped unsupported or oversized: ${data.skipped.join(", ")}`
+        );
       } else {
-        setMessage(`Added ${data.evidence.length} file(s).`);
+        setMessage(`Added ${data.evidence.length} file(s) with auto-filled captions and timeline entries.`);
       }
       await refresh();
     } else {
@@ -58,6 +60,11 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
       <p className="mt-1 text-sm text-slate-600">
         Order confirmations, receipts, chats, emails, tracking screenshots or photos. JPG, PNG, WEBP or PDF, up to
         20MB each.
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        Each file you add automatically gets a caption and a timeline entry so you&apos;re never starting from a
+        blank page — head to <span className="font-medium text-slate-700">Review Exhibits</span> and{" "}
+        <span className="font-medium text-slate-700">Timeline</span> afterward to edit or remove them.
       </p>
 
       <div

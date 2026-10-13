@@ -45,6 +45,7 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
   const warnings: string[] = [];
   if (included.length === 0) warnings.push("No evidence is included — your export will have an empty evidence index.");
   if (details.timeline.length === 0) warnings.push("No timeline events recorded — consider adding at least a few key dates.");
+  if (!details.case.merchantName.trim()) warnings.push("No company or merchant name was set for this case.");
   if (details.case.transactionAmount === null) warnings.push("No transaction amount was set for this case.");
   const uncaptioned = included.filter((e) => !e.caption.trim());
   if (uncaptioned.length > 0) warnings.push(`${uncaptioned.length} included exhibit(s) have no caption.`);
@@ -62,6 +63,10 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
         <div>
           <p className="text-xs text-slate-400">Dispute type</p>
           <p className="mt-0.5 font-medium text-slate-900">{disputeLabel}</p>
+        </div>
+        <div>
+          <p className="text-xs text-slate-400">Company / merchant</p>
+          <p className="mt-0.5 font-medium text-slate-900">{details.case.merchantName || "Not set"}</p>
         </div>
         <div>
           <p className="text-xs text-slate-400">Transaction amount</p>

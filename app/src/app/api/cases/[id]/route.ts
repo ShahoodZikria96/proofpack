@@ -14,6 +14,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const patch: Record<string, unknown> = {};
   if (typeof body.title === "string") patch.title = body.title;
   if (typeof body.type === "string") patch.type = body.type;
+  if (typeof body.merchantName === "string") patch.merchantName = body.merchantName.trim();
+  if (typeof body.country === "string") patch.country = body.country.trim();
   if (typeof body.currency === "string") patch.currency = body.currency.toUpperCase();
   if (body.transactionAmount === null || typeof body.transactionAmount === "number") {
     patch.transactionAmount = body.transactionAmount;

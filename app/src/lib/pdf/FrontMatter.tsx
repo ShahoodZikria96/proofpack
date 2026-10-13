@@ -138,6 +138,16 @@ export function FrontMatter({
         <Text style={styles.coverSubtitle}>{disputeLabel(caseData.type)}</Text>
 
         <View style={styles.coverMetaRow}>
+          <Text style={styles.coverMetaLabel}>Company / merchant</Text>
+          <Text style={styles.coverMetaValue}>{caseData.merchantName || "Not specified"}</Text>
+        </View>
+        {caseData.country ? (
+          <View style={styles.coverMetaRow}>
+            <Text style={styles.coverMetaLabel}>Country / region</Text>
+            <Text style={styles.coverMetaValue}>{caseData.country}</Text>
+          </View>
+        ) : null}
+        <View style={styles.coverMetaRow}>
           <Text style={styles.coverMetaLabel}>Transaction amount</Text>
           <Text style={styles.coverMetaValue}>{formatAmount(caseData.currency, caseData.transactionAmount)}</Text>
         </View>
@@ -164,7 +174,9 @@ export function FrontMatter({
         <Text style={styles.sectionHeading}>Case Summary</Text>
         <Text style={styles.paragraph}>
           This evidence pack documents a consumer purchase/payment dispute of type &quot;{disputeLabel(caseData.type)}
-          &quot;, involving a transaction amount of {formatAmount(caseData.currency, caseData.transactionAmount)}.
+          &quot; with {caseData.merchantName || "the named merchant"}
+          {caseData.country ? ` (${caseData.country})` : ""}, involving a transaction amount of{" "}
+          {formatAmount(caseData.currency, caseData.transactionAmount)}.
         </Text>
         <Text style={styles.paragraph}>
           It contains {included.length} piece{included.length === 1 ? "" : "s"} of evidence, labeled Exhibit{" "}

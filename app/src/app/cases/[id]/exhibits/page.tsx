@@ -53,6 +53,10 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
         Label each piece of evidence, add a short caption, reorder exhibits, and exclude anything that shouldn&apos;t
         be in the final pack.
       </p>
+      <p className="mt-1 text-xs text-slate-500">
+        We&apos;ve pre-filled a label and caption for each file from its filename — edit them to say what the file
+        actually shows.
+      </p>
 
       {details.evidence.length === 0 ? (
         <p className="mt-6 text-sm text-slate-400">No evidence uploaded yet. Go to the Upload tab first.</p>
@@ -75,7 +79,9 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
 
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-3">
-                  <label className="text-xs font-medium text-slate-500">Exhibit</label>
+                  <label className="text-xs font-medium text-slate-500" title="Short reference used in your PDF, e.g. A, B, 1, 2">
+                    Exhibit
+                  </label>
                   <input
                     defaultValue={ev.exhibitLabel}
                     onBlur={(e) => {
@@ -119,7 +125,8 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
                     onChange={(e) => patchEvidence(ev.id, { include: e.target.checked })}
                   />
                   Include in exported PDF
-                  {savingId === ev.id && <span className="text-slate-400">Saving...</span>}
+                  <span className="text-slate-400">— uncheck to keep this file in the case without adding it to the final PDF</span>
+                  {savingId === ev.id && <span className="text-slate-400">· Saving...</span>}
                 </label>
               </div>
             </li>

@@ -16,6 +16,8 @@ export interface Case {
   type: DisputeType;
   title: string;
   status: CaseStatus;
+  merchantName: string;
+  country: string;
   currency: string;
   transactionAmount: number | null;
   createdAt: string;

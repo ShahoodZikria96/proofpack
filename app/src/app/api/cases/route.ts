@@ -14,13 +14,18 @@ export async function POST(request: NextRequest) {
   if (!validType) {
     return NextResponse.json({ error: "Invalid dispute type" }, { status: 400 });
   }
+  const merchantName = typeof body.merchantName === "string" ? body.merchantName.trim() : "";
+  if (!merchantName) {
+    return NextResponse.json({ error: "Merchant or company name is required" }, { status: 400 });
+  }
   const title = typeof body.title === "string" ? body.title : "";
+  const country = typeof body.country === "string" ? body.country.trim() : "";
   const currency = typeof body.currency === "string" && body.currency.trim() ? body.currency.trim().toUpperCase() : "USD";
   const transactionAmount =
     typeof body.transactionAmount === "number" && Number.isFinite(body.transactionAmount)
       ? body.transactionAmount
       : null;
 
-  const created = await createCase({ type, title, currency, transactionAmount });
+  const created = await createCase({ type, title, merchantName, country, currency, transactionAmount });
   return NextResponse.json({ case: created }, { status: 201 });
 }

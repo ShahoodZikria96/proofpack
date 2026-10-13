@@ -92,17 +92,12 @@ async function addUnsupportedPreviewPage(
   pdfDoc: PDFDocument,
   font: PDFFont,
   boldFont: PDFFont,
-  evidence: Evidence
+  evidence: Evidence,
+  reason = "Preview not available for this file type in the exported PDF."
 ) {
   const page = pdfDoc.addPage([PAGE_W, PAGE_H]);
   const contentTop = drawHeader(page, font, boldFont, evidence.exhibitLabel, evidence.originalName, evidence.caption);
-  page.drawText("Preview not available for this file type in the exported PDF.", {
-    x: MARGIN,
-    y: contentTop - 20,
-    size: 10,
-    font,
-    color: LIGHT,
-  });
+  page.drawText(reason, { x: MARGIN, y: contentTop - 20, size: 10, font, color: LIGHT });
   page.drawText("The original file is retained with the case record.", {
     x: MARGIN,
     y: contentTop - 36,
@@ -112,21 +107,35 @@ async function addUnsupportedPreviewPage(
   });
 }
 
-async function addPdfDividerPage(
-  pdfDoc: PDFDocument,
-  font: PDFFont,
-  boldFont: PDFFont,
-  evidence: Evidence
-) {
-  const page = pdfDoc.addPage([PAGE_W, PAGE_H]);
-  const contentTop = drawHeader(page, font, boldFont, evidence.exhibitLabel, evidence.originalName, evidence.caption);
-  page.drawText("The original PDF document is attached on the following page(s).", {
-    x: MARGIN,
-    y: contentTop - 20,
-    size: 10,
-    font,
-    color: SLATE,
-  });
+const BAND_BG = rgb(241 / 255, 245 / 255, 249 / 255);
+
+/**
+ * Labels a copied page from an original evidence PDF without spending a whole
+ * extra page on it. A prior version inserted a full blank "divider" page
+ * before every PDF exhibit's content - here, a compact band (first page) or
+ * corner tag (following pages) is stamped directly onto the real content.
+ */
+function stampExhibitBand(page: PDFPage, font: PDFFont, boldFont: PDFFont, label: string, originalName: string) {
+  const { width, height } = page.getSize();
+  const bandHeight = 22;
+  page.drawRectangle({ x: 0, y: height - bandHeight, width, height: bandHeight, color: BAND_BG, opacity: 0.94 });
+  const text = `Exhibit ${label} — ${originalName}`;
+  const size = Math.min(9.5, (width - 16) / (boldFont.widthOfTextAtSize(text, 9.5) / 9.5));
+  page.drawText(text, { x: 8, y: height - bandHeight + 6, size, font: boldFont, color: NAVY });
+}
+
+function stampExhibitCorner(page: PDFPage, boldFont: PDFFont, label: string) {
+  const { width, height } = page.getSize();
+  const text = `Exhibit ${label}`;
+  const size = 8;
+  const textWidth = boldFont.widthOfTextAtSize(text, size);
+  const padding = 5;
+  const tagWidth = textWidth + padding * 2;
+  const tagHeight = 14;
+  const x = Math.max(2, width - tagWidth - 6);
+  const y = Math.max(2, height - tagHeight - 6);
+  page.drawRectangle({ x, y, width: tagWidth, height: tagHeight, color: BAND_BG, opacity: 0.9 });
+  page.drawText(text, { x: x + padding, y: y + 3.5, size, font: boldFont, color: NAVY });
 }
 
 function stampFooters(pages: PDFPage[], font: PDFFont) {
@@ -173,13 +182,21 @@ export async function buildExportPdf(caseId: string): Promise<Buffer | null> {
     if (evidence.fileType === "image/jpeg" || evidence.fileType === "image/png") {
       await addImageExhibitPage(pdfDoc, font, boldFont, evidence, file.buffer);
     } else if (evidence.fileType === "application/pdf") {
-      await addPdfDividerPage(pdfDoc, font, boldFont, evidence);
       try {
         const srcDoc = await PDFDocument.load(file.buffer, { ignoreEncryption: true });
-        const copied = await pdfDoc.copyPages(srcDoc, srcDoc.getPageIndices());
-        copied.forEach((p) => pdfDoc.addPage(p));
+        const indices = srcDoc.getPageIndices();
+        if (indices.length === 0) {
+          await addUnsupportedPreviewPage(pdfDoc, font, boldFont, evidence, "This PDF file had no pages to include.");
+        } else {
+          const copied = await pdfDoc.copyPages(srcDoc, indices);
+          copied.forEach((p, i) => {
+            pdfDoc.addPage(p);
+            if (i === 0) stampExhibitBand(p, font, boldFont, evidence.exhibitLabel, evidence.originalName);
+            else stampExhibitCorner(p, boldFont, evidence.exhibitLabel);
+          });
+        }
       } catch {
-        // Source PDF could not be parsed; the divider page still records the exhibit.
+        await addUnsupportedPreviewPage(pdfDoc, font, boldFont, evidence, "The original PDF file could not be read.");
       }
     } else {
       await addUnsupportedPreviewPage(pdfDoc, font, boldFont, evidence);

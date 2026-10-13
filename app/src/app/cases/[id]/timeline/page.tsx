@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useCallback, useEffect, useState } from "react";
-import type { CaseWithDetails } from "@/lib/types";
+import type { CaseWithDetails, TimelineEvent } from "@/lib/types";
 
 export default function TimelinePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -39,6 +39,15 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
     await refresh();
   }
 
+  async function patchEvent(eventId: string, patch: Partial<TimelineEvent>) {
+    await fetch(`/api/cases/${id}/timeline/${eventId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    });
+    await refresh();
+  }
+
   async function removeEvent(eventId: string) {
     await fetch(`/api/cases/${id}/timeline/${eventId}`, { method: "DELETE" });
     await refresh();
@@ -52,6 +61,10 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
       <p className="mt-1 text-sm text-slate-600">
         Add each key event in order — when you ordered, when you reached out, when things went wrong — and link the
         exhibits that prove it.
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        We added one entry below per file you uploaded, dated today — click into the date and title to correct them
+        to when things actually happened, and add any events that have no file, like a phone call.
       </p>
 
       <form onSubmit={addEvent} className="mt-6 space-y-3 rounded-lg border border-slate-200 p-4">
@@ -131,29 +144,72 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
         {details.timeline.length === 0 ? (
           <p className="text-sm text-slate-400">No events yet.</p>
         ) : (
-          details.timeline.map((event) => {
-            const labels = event.evidenceIds
-              .map((eid) => details.evidence.find((e) => e.id === eid)?.exhibitLabel)
-              .filter(Boolean);
-            return (
-              <li key={event.id} className="flex items-start justify-between gap-4 rounded-lg border border-slate-200 p-4">
-                <div>
-                  <p className="text-xs font-medium text-slate-400">{event.date}</p>
-                  <p className="font-medium text-slate-900">{event.title}</p>
-                  {event.description && <p className="mt-1 text-sm text-slate-600">{event.description}</p>}
-                  {labels.length > 0 && (
-                    <p className="mt-1 text-xs text-slate-500">Exhibits: {labels.join(", ")}</p>
-                  )}
-                </div>
+          details.timeline.map((event) => (
+            <li key={event.id} className="rounded-lg border border-slate-200 p-4">
+              <div className="flex items-start gap-3">
+                <input
+                  type="date"
+                  defaultValue={event.date}
+                  onBlur={(e) => {
+                    if (e.target.value && e.target.value !== event.date) patchEvent(event.id, { date: e.target.value });
+                  }}
+                  className="w-36 shrink-0 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600"
+                />
+                <input
+                  defaultValue={event.title}
+                  onBlur={(e) => {
+                    if (e.target.value.trim() && e.target.value !== event.title)
+                      patchEvent(event.id, { title: e.target.value });
+                  }}
+                  className="flex-1 rounded border border-slate-300 px-2 py-1 text-sm font-medium text-slate-900"
+                />
                 <button
                   onClick={() => removeEvent(event.id)}
                   className="shrink-0 text-xs font-medium text-red-600 hover:text-red-700"
                 >
                   Remove
                 </button>
-              </li>
-            );
-          })
+              </div>
+
+              <textarea
+                defaultValue={event.description}
+                placeholder="What happened, in your own words"
+                onBlur={(e) => {
+                  if (e.target.value !== event.description) patchEvent(event.id, { description: e.target.value });
+                }}
+                rows={2}
+                className="mt-2 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+              />
+
+              {details.evidence.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {details.evidence.map((ev) => {
+                    const selected = event.evidenceIds.includes(ev.id);
+                    return (
+                      <button
+                        type="button"
+                        key={ev.id}
+                        onClick={() =>
+                          patchEvent(event.id, {
+                            evidenceIds: selected
+                              ? event.evidenceIds.filter((x) => x !== ev.id)
+                              : [...event.evidenceIds, ev.id],
+                          })
+                        }
+                        className={`rounded-full border px-2.5 py-1 text-xs ${
+                          selected
+                            ? "border-slate-900 bg-slate-900 text-white"
+                            : "border-slate-300 text-slate-600 hover:border-slate-400"
+                        }`}
+                      >
+                        Exhibit {ev.exhibitLabel}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </li>
+          ))
         )}
       </ul>
     </div>

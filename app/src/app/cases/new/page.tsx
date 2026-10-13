@@ -8,6 +8,8 @@ import { DISPUTE_TYPES, type DisputeType } from "@/lib/types";
 export default function NewCasePage() {
   const router = useRouter();
   const [type, setType] = useState<DisputeType>("non-delivery");
+  const [merchantName, setMerchantName] = useState("");
+  const [country, setCountry] = useState("");
   const [title, setTitle] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [amount, setAmount] = useState("");
@@ -16,6 +18,10 @@ export default function NewCasePage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!merchantName.trim()) {
+      setError("Please enter the company or merchant you're disputing with — this is required.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -24,16 +30,21 @@ export default function NewCasePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type,
-          title,
+          merchantName,
+          country,
+          title: title.trim() || `Dispute with ${merchantName.trim()}`,
           currency,
           transactionAmount: amount.trim() ? Number(amount) : null,
         }),
       });
-      if (!res.ok) throw new Error("Could not create case");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Could not create case");
+      }
       const data = await res.json();
       router.push(`/cases/${data.case.id}/upload`);
-    } catch {
-      setError("Something went wrong creating your case. Please try again.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong creating your case. Please try again.");
       setSubmitting(false);
     }
   }
@@ -50,6 +61,7 @@ export default function NewCasePage() {
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>
             <label className="block text-sm font-medium text-slate-700">Dispute type</label>
+            <p className="mt-0.5 text-xs text-slate-500">Choose whichever option is closest to what happened.</p>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as DisputeType)}
@@ -64,7 +76,39 @@ export default function NewCasePage() {
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-slate-700">
+              Company / merchant <span className="text-red-500">*</span>
+            </label>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Who is this dispute with? e.g. Amazon, a local store, an airline, a freelancer.
+            </p>
+            <input
+              value={merchantName}
+              onChange={(e) => setMerchantName(e.target.value)}
+              placeholder="e.g. AudioGearDirect"
+              required
+              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Country / region</label>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Where you or the merchant are based — helps if you submit this abroad. Optional.
+            </p>
+            <input
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              placeholder="e.g. Pakistan, United States, United Kingdom"
+              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-slate-700">Case title</label>
+            <p className="mt-0.5 text-xs text-slate-500">
+              A short name for your own reference. Leave blank and we&apos;ll generate one.
+            </p>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -76,6 +120,7 @@ export default function NewCasePage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700">Currency</label>
+              <p className="mt-0.5 text-xs text-slate-500">3-letter code, e.g. USD, PKR, EUR.</p>
               <input
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value.toUpperCase())}
@@ -85,6 +130,7 @@ export default function NewCasePage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700">Transaction amount</label>
+              <p className="mt-0.5 text-xs text-slate-500">Leave blank if you&apos;re not sure yet.</p>
               <input
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}

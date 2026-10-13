@@ -64,6 +64,14 @@ function withCaseLock<T>(caseId: string, fn: () => Promise<T>): Promise<T> {
   return result;
 }
 
+/** "order-confirmation_v2.pdf" -> "Order confirmation v2" */
+function humanizeFilename(name: string): string {
+  const withoutExt = name.replace(/\.[^.]+$/, "");
+  const spaced = withoutExt.replace(/[-_]+/g, " ").trim();
+  if (!spaced) return name;
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
 /** Spreadsheet-style label: 0 -> A, 25 -> Z, 26 -> AA, ... */
 export function exhibitLabelForIndex(index: number): string {
   let n = index;
@@ -90,6 +98,8 @@ export async function listCases(): Promise<Case[]> {
 export async function createCase(input: {
   type: DisputeType;
   title: string;
+  merchantName: string;
+  country: string;
   currency: string;
   transactionAmount: number | null;
 }): Promise<Case> {
@@ -99,6 +109,8 @@ export async function createCase(input: {
     type: input.type,
     title: input.title.trim() || "Untitled case",
     status: "draft",
+    merchantName: input.merchantName.trim(),
+    country: input.country.trim(),
     currency: input.currency || "USD",
     transactionAmount: input.transactionAmount,
     createdAt: now,
@@ -120,7 +132,7 @@ export async function getCaseWithDetails(caseId: string): Promise<CaseWithDetail
 
 export async function updateCase(
   caseId: string,
-  patch: Partial<Pick<Case, "title" | "type" | "currency" | "transactionAmount" | "status">>
+  patch: Partial<Pick<Case, "title" | "type" | "merchantName" | "country" | "currency" | "transactionAmount" | "status">>
 ): Promise<Case | null> {
   return withCaseLock(caseId, async () => {
     const record = await readCaseRecord(caseId);
@@ -143,6 +155,7 @@ export async function addEvidence(
     await fs.writeFile(path.join(filesDir(caseId), input.fileName), input.buffer);
 
     const nextIndex = record.evidence.length;
+    const humanized = humanizeFilename(input.originalName);
     const evidence: Evidence = {
       id: randomUUID(),
       caseId,
@@ -150,12 +163,25 @@ export async function addEvidence(
       originalName: input.originalName,
       fileType: input.fileType,
       exhibitLabel: exhibitLabelForIndex(nextIndex),
-      caption: "",
+      caption: humanized,
       sortOrder: nextIndex,
       include: true,
       createdAt: new Date().toISOString(),
     };
     record.evidence.push(evidence);
+
+    // Give the user a starting point instead of an empty timeline: one entry
+    // per upload, dated today (the one fact we actually know), editable/removable.
+    record.timeline.push({
+      id: randomUUID(),
+      caseId,
+      date: new Date().toISOString().slice(0, 10),
+      title: `Added evidence: ${humanized}`,
+      description: "",
+      evidenceIds: [evidence.id],
+      sortOrder: record.timeline.length,
+    });
+
     record.case.updatedAt = new Date().toISOString();
     await writeCaseRecord(record);
     return evidence;
@@ -201,6 +227,11 @@ export async function deleteEvidence(caseId: string, evidenceId: string): Promis
     if (idx === -1) return false;
     const [removed] = record.evidence.splice(idx, 1);
     await fs.rm(path.join(filesDir(caseId), removed.fileName), { force: true });
+    // Drop the deleted evidence from any timeline events that referenced it,
+    // so the timeline never points at an exhibit that no longer exists.
+    for (const event of record.timeline) {
+      event.evidenceIds = event.evidenceIds.filter((id) => id !== evidenceId);
+    }
     record.case.updatedAt = new Date().toISOString();
     await writeCaseRecord(record);
     return true;
