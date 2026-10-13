@@ -2,6 +2,7 @@
 
 import { use, useCallback, useEffect, useState } from "react";
 import type { CaseWithDetails, Evidence } from "@/lib/types";
+import { StepNav } from "../StepNav";
 
 export default function ExhibitsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -133,6 +134,8 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
           ))}
         </ul>
       )}
+
+      <StepNav caseId={id} />
     </div>
   );
 }

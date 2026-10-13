@@ -2,6 +2,7 @@
 
 import { use, useCallback, useEffect, useRef, useState } from "react";
 import type { CaseWithDetails } from "@/lib/types";
+import { StepNav } from "../StepNav";
 
 const ACCEPT = "image/jpeg,image/png,image/webp,application/pdf";
 
@@ -129,6 +130,8 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
           </ul>
         )}
       </div>
+
+      <StepNav caseId={id} />
     </div>
   );
 }

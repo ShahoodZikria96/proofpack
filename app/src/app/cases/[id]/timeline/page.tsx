@@ -1,7 +1,9 @@
 "use client";
 
-import { use, useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import type { CaseWithDetails, TimelineEvent } from "@/lib/types";
+import { buildAutoDescription } from "@/lib/autoDescription";
+import { StepNav } from "../StepNav";
 
 export default function TimelinePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -11,6 +13,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
   const [description, setDescription] = useState("");
   const [evidenceIds, setEvidenceIds] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const descriptionRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
   const refresh = useCallback(async () => {
     const res = await fetch(`/api/cases/${id}`, { cache: "no-store" });
@@ -53,6 +56,23 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
     await refresh();
   }
 
+  function autoWriteNewDescription() {
+    if (!details) return;
+    const linked = details.evidence.filter((ev) => evidenceIds.includes(ev.id));
+    const generated = buildAutoDescription(title, date, linked);
+    if (generated) setDescription(generated);
+  }
+
+  function autoWriteEventDescription(event: TimelineEvent) {
+    if (!details) return;
+    const linked = details.evidence.filter((ev) => event.evidenceIds.includes(ev.id));
+    const generated = buildAutoDescription(event.title, event.date, linked);
+    if (!generated) return;
+    const el = descriptionRefs.current[event.id];
+    if (el) el.value = generated;
+    patchEvent(event.id, { description: generated });
+  }
+
   if (!details) return <p className="text-sm text-slate-500">Loading...</p>;
 
   return (
@@ -64,7 +84,10 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
       </p>
       <p className="mt-1 text-xs text-slate-500">
         We added one entry below per file you uploaded, dated today — click into the date and title to correct them
-        to when things actually happened, and add any events that have no file, like a phone call.
+        to when things actually happened, and add any events that have no file, like a phone call. No time to write
+        a description? Link the exhibits first and click{" "}
+        <span className="font-medium text-slate-700">Auto-write from exhibits</span> to draft one from your title,
+        date and linked files — then edit it to add anything the files don&apos;t show.
       </p>
 
       <form onSubmit={addEvent} className="mt-6 space-y-3 rounded-lg border border-slate-200 p-4">
@@ -89,17 +112,6 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
               required
             />
           </div>
-        </div>
-
-        <div>
-          <label className="text-xs font-medium text-slate-500">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={2}
-            placeholder="What happened, in your own words"
-            className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
-          />
         </div>
 
         {details.evidence.length > 0 && (
@@ -130,6 +142,27 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
             </div>
           </div>
         )}
+
+        <div>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-medium text-slate-500">Description</label>
+            <button
+              type="button"
+              onClick={autoWriteNewDescription}
+              disabled={!title.trim() && evidenceIds.length === 0}
+              className="text-xs font-medium text-slate-600 underline decoration-dotted hover:text-slate-900 disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
+            >
+              Auto-write from exhibits
+            </button>
+          </div>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={2}
+            placeholder="What happened, in your own words — or use Auto-write above"
+            className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+          />
+        </div>
 
         <button
           type="submit"
@@ -171,16 +204,6 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                 </button>
               </div>
 
-              <textarea
-                defaultValue={event.description}
-                placeholder="What happened, in your own words"
-                onBlur={(e) => {
-                  if (e.target.value !== event.description) patchEvent(event.id, { description: e.target.value });
-                }}
-                rows={2}
-                className="mt-2 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
-              />
-
               {details.evidence.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {details.evidence.map((ev) => {
@@ -208,10 +231,36 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                   })}
                 </div>
               )}
+
+              <div className="mt-2 flex items-center justify-between">
+                <label className="text-xs font-medium text-slate-500">Description</label>
+                <button
+                  type="button"
+                  onClick={() => autoWriteEventDescription(event)}
+                  disabled={!event.title.trim() && event.evidenceIds.length === 0}
+                  className="text-xs font-medium text-slate-600 underline decoration-dotted hover:text-slate-900 disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
+                >
+                  Auto-write from exhibits
+                </button>
+              </div>
+              <textarea
+                ref={(el) => {
+                  descriptionRefs.current[event.id] = el;
+                }}
+                defaultValue={event.description}
+                placeholder="What happened, in your own words — or use Auto-write above"
+                onBlur={(e) => {
+                  if (e.target.value !== event.description) patchEvent(event.id, { description: e.target.value });
+                }}
+                rows={2}
+                className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+              />
             </li>
           ))
         )}
       </ul>
+
+      <StepNav caseId={id} />
     </div>
   );
 }

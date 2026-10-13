@@ -3,6 +3,7 @@
 import { use, useCallback, useEffect, useState } from "react";
 import type { CaseWithDetails } from "@/lib/types";
 import { DISPUTE_TYPES } from "@/lib/types";
+import { StepNav } from "../StepNav";
 
 export default function PreviewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -126,6 +127,8 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
       {details.case.status === "exported" && (
         <p className="mt-2 text-center text-xs text-slate-400">This case has been exported before.</p>
       )}
+
+      <StepNav caseId={id} />
     </div>
   );
 }
