@@ -5,11 +5,33 @@
   --foreground: #171717;
 }
 
+/*
+ * Brand palette: a deliberately desaturated, "institutional" blue rather
+ * than a bright SaaS blue. ProofPack is used by people mid-dispute, often
+ * stressed - blue is the color most consistently associated with trust,
+ * security and calm (it's why banks, insurers and legal/compliance tools
+ * default to it), and a muted/navy-leaning blue reads as serious and
+ * official rather than playful or "consumer app." Red is reserved for
+ * destructive actions only - overusing it would raise the baseline anxiety
+ * of someone already anxious about their case.
+ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-brand-50: #eef3fa;
+  --color-brand-100: #dbe6f4;
+  --color-brand-200: #b6cce9;
+  --color-brand-300: #8babd9;
+  --color-brand-400: #5c84c4;
+  --color-brand-500: #3c65a8;
+  --color-brand-600: #2c4d87;
+  --color-brand-700: #223d6c;
+  --color-brand-800: #1a2f56;
+  --color-brand-900: #122040;
+  --color-brand-950: #0b1630;
 }
 
 @media (prefers-color-scheme: dark) {

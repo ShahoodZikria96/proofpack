@@ -55,7 +55,7 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-slate-900">Preview &amp; export</h2>
+      <h2 className="text-lg font-semibold text-brand-950">Preview &amp; export</h2>
       <p className="mt-1 text-sm text-slate-600">
         Review your case before generating the final PDF. You can always come back and edit.
       </p>
@@ -63,15 +63,15 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
       <div className="mt-6 grid grid-cols-2 gap-4 rounded-lg border border-slate-200 p-5 text-sm sm:grid-cols-4">
         <div>
           <p className="text-xs text-slate-400">Dispute type</p>
-          <p className="mt-0.5 font-medium text-slate-900">{disputeLabel}</p>
+          <p className="mt-0.5 font-medium text-brand-950">{disputeLabel}</p>
         </div>
         <div>
           <p className="text-xs text-slate-400">Company / merchant</p>
-          <p className="mt-0.5 font-medium text-slate-900">{details.case.merchantName || "Not set"}</p>
+          <p className="mt-0.5 font-medium text-brand-950">{details.case.merchantName || "Not set"}</p>
         </div>
         <div>
           <p className="text-xs text-slate-400">Transaction amount</p>
-          <p className="mt-0.5 font-medium text-slate-900">
+          <p className="mt-0.5 font-medium text-brand-950">
             {details.case.transactionAmount === null
               ? "Not set"
               : `${details.case.currency} ${details.case.transactionAmount.toFixed(2)}`}
@@ -79,13 +79,13 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
         </div>
         <div>
           <p className="text-xs text-slate-400">Evidence included</p>
-          <p className="mt-0.5 font-medium text-slate-900">
+          <p className="mt-0.5 font-medium text-brand-950">
             {included.length} of {details.evidence.length}
           </p>
         </div>
         <div>
           <p className="text-xs text-slate-400">Timeline events</p>
-          <p className="mt-0.5 font-medium text-slate-900">{details.timeline.length}</p>
+          <p className="mt-0.5 font-medium text-brand-950">{details.timeline.length}</p>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
       )}
 
       <div className="mt-6">
-        <h3 className="text-sm font-semibold text-slate-900">Exhibits in this export</h3>
+        <h3 className="text-sm font-semibold text-brand-950">Exhibits in this export</h3>
         {included.length === 0 ? (
           <p className="mt-2 text-sm text-slate-400">None yet.</p>
         ) : (
@@ -119,7 +119,7 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
       <button
         onClick={handleExport}
         disabled={exporting}
-        className="mt-8 w-full rounded-md bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-60"
+        className="mt-8 w-full rounded-md bg-brand-700 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-800 disabled:opacity-60"
       >
         {exporting ? "Generating PDF..." : "Generate & download evidence pack"}
       </button>

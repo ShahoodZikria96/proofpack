@@ -58,7 +58,7 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-slate-900">Upload evidence</h2>
+      <h2 className="text-lg font-semibold text-brand-950">Upload evidence</h2>
       <p className="mt-1 text-sm text-slate-600">
         Order confirmations, receipts, chats, emails, tracking screenshots or photos — WhatsApp screenshots work
         fine too. JPG, PNG, WEBP, PDF or Word (.doc/.docx), up to 20MB each.
@@ -86,7 +86,7 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
         }}
         onClick={() => inputRef.current?.click()}
         className={`mt-6 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-14 text-center transition-colors ${
-          dragOver ? "border-slate-900 bg-slate-50" : "border-slate-300 hover:border-slate-400"
+          dragOver ? "border-brand-600 bg-brand-50" : "border-slate-300 hover:border-brand-400"
         }`}
       >
         <p className="text-sm font-medium text-slate-700">
@@ -106,7 +106,7 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
       {message && <p className="mt-3 text-sm text-slate-600">{message}</p>}
 
       <div className="mt-8">
-        <h3 className="text-sm font-semibold text-slate-900">
+        <h3 className="text-sm font-semibold text-brand-950">
           Uploaded files ({details.evidence.length})
         </h3>
         {details.evidence.length === 0 ? (
@@ -116,7 +116,7 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
             {details.evidence.map((ev) => (
               <li key={ev.id} className="flex items-center justify-between gap-4 px-4 py-3">
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-slate-900 text-xs font-bold text-white">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-brand-700 text-xs font-bold text-white">
                     {ev.exhibitLabel}
                   </span>
                   <div className="overflow-hidden">

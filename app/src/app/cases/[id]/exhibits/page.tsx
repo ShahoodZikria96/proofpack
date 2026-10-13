@@ -49,7 +49,7 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-slate-900">Review exhibits</h2>
+      <h2 className="text-lg font-semibold text-brand-950">Review exhibits</h2>
       <p className="mt-1 text-sm text-slate-600">
         Label each piece of evidence, add a short caption, reorder exhibits, and exclude anything that shouldn&apos;t
         be in the final pack.
@@ -92,7 +92,7 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
                     onBlur={(e) => {
                       if (e.target.value !== ev.exhibitLabel) patchEvidence(ev.id, { exhibitLabel: e.target.value });
                     }}
-                    className="w-16 rounded border border-slate-300 px-2 py-1 text-sm font-semibold"
+                    className="w-16 rounded border border-slate-300 px-2 py-1 text-sm font-semibold focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
                   <span className="truncate text-sm text-slate-700">{ev.originalName}</span>
                   {!ev.caption.trim() && (
@@ -125,7 +125,7 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
                     if (e.target.value !== ev.caption) patchEvidence(ev.id, { caption: e.target.value });
                   }}
                   rows={2}
-                  className="w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+                  className="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
 
                 <label className="flex items-center gap-2 text-xs text-slate-600">
@@ -133,6 +133,7 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
                     type="checkbox"
                     checked={ev.include}
                     onChange={(e) => patchEvidence(ev.id, { include: e.target.checked })}
+                    className="accent-brand-600"
                   />
                   Include in exported PDF
                   <span className="text-slate-400">— uncheck to keep this file in the case without adding it to the final PDF</span>

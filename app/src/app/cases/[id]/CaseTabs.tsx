@@ -18,8 +18,8 @@ export function CaseTabs({ caseId }: { caseId: string }) {
             href={href}
             className={`border-b-2 px-3 py-2.5 text-sm font-medium transition-colors ${
               active
-                ? "border-slate-900 text-slate-900"
-                : "border-transparent text-slate-500 hover:text-slate-800"
+                ? "border-brand-700 text-brand-800"
+                : "border-transparent text-slate-500 hover:text-brand-700"
             }`}
           >
             {tab.label}

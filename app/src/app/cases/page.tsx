@@ -17,10 +17,10 @@ export default async function CasesPage() {
       <SiteHeader />
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-14">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-slate-900">My Cases</h1>
+          <h1 className="text-2xl font-bold text-brand-950">My Cases</h1>
           <Link
             href="/cases/new"
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            className="rounded-md bg-brand-700 px-4 py-2 text-sm font-medium text-white hover:bg-brand-800"
           >
             New case
           </Link>
@@ -34,9 +34,9 @@ export default async function CasesPage() {
           <ul className="mt-8 divide-y divide-slate-200 rounded-lg border border-slate-200">
             {cases.map((c) => (
               <li key={c.id}>
-                <Link href={`/cases/${c.id}/upload`} className="flex items-center justify-between px-5 py-4 hover:bg-slate-50">
+                <Link href={`/cases/${c.id}/upload`} className="flex items-center justify-between px-5 py-4 hover:bg-brand-50">
                   <div>
-                    <p className="font-medium text-slate-900">{c.title}</p>
+                    <p className="font-medium text-brand-950">{c.title}</p>
                     <p className="text-sm text-slate-500">{disputeLabel(c.type)}</p>
                   </div>
                   <div className="text-right">

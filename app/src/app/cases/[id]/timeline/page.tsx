@@ -77,7 +77,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-slate-900">Build your timeline</h2>
+      <h2 className="text-lg font-semibold text-brand-950">Build your timeline</h2>
       <p className="mt-1 text-sm text-slate-600">
         Add each key event in order — when you ordered, when you reached out, when things went wrong — and link the
         exhibits that prove it.
@@ -86,7 +86,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
         We added one entry below per file you uploaded, dated today — click into the date and title to correct them
         to when things actually happened, and add any events that have no file, like a phone call. No time to write
         a description? Link the exhibits first and click{" "}
-        <span className="font-medium text-slate-700">Auto-write from exhibits</span> to draft one from your title,
+        <span className="font-medium text-brand-700">Auto-write from exhibits</span> to draft one from your title,
         date and linked files — then edit it to add anything the files don&apos;t show.
       </p>
 
@@ -98,7 +98,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+              className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               required
             />
           </div>
@@ -108,7 +108,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Placed order"
-              className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+              className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               required
             />
           </div>
@@ -131,8 +131,8 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                     }
                     className={`rounded-full border px-2.5 py-1 text-xs ${
                       selected
-                        ? "border-slate-900 bg-slate-900 text-white"
-                        : "border-slate-300 text-slate-600 hover:border-slate-400"
+                        ? "border-brand-700 bg-brand-700 text-white"
+                        : "border-slate-300 text-slate-600 hover:border-brand-400"
                     }`}
                   >
                     Exhibit {ev.exhibitLabel}
@@ -150,7 +150,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
               type="button"
               onClick={autoWriteNewDescription}
               disabled={!title.trim() && evidenceIds.length === 0}
-              className="text-xs font-medium text-slate-600 underline decoration-dotted hover:text-slate-900 disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
+              className="text-xs font-medium text-brand-700 underline decoration-dotted hover:text-brand-900 disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
             >
               Auto-write from exhibits
             </button>
@@ -160,14 +160,14 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
             placeholder="What happened, in your own words — or use Auto-write above"
-            className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+            className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+          className="rounded-md bg-brand-700 px-4 py-2 text-sm font-medium text-white hover:bg-brand-800 disabled:opacity-60"
         >
           Add event
         </button>
@@ -186,7 +186,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                   onBlur={(e) => {
                     if (e.target.value && e.target.value !== event.date) patchEvent(event.id, { date: e.target.value });
                   }}
-                  className="w-36 shrink-0 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600"
+                  className="w-36 shrink-0 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
                 <input
                   defaultValue={event.title}
@@ -194,7 +194,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                     if (e.target.value.trim() && e.target.value !== event.title)
                       patchEvent(event.id, { title: e.target.value });
                   }}
-                  className="flex-1 rounded border border-slate-300 px-2 py-1 text-sm font-medium text-slate-900"
+                  className="flex-1 rounded border border-slate-300 px-2 py-1 text-sm font-medium text-brand-950 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
                 <button
                   onClick={() => removeEvent(event.id)}
@@ -221,8 +221,8 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                         }
                         className={`rounded-full border px-2.5 py-1 text-xs ${
                           selected
-                            ? "border-slate-900 bg-slate-900 text-white"
-                            : "border-slate-300 text-slate-600 hover:border-slate-400"
+                            ? "border-brand-700 bg-brand-700 text-white"
+                            : "border-slate-300 text-slate-600 hover:border-brand-400"
                         }`}
                       >
                         Exhibit {ev.exhibitLabel}
@@ -238,7 +238,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                   type="button"
                   onClick={() => autoWriteEventDescription(event)}
                   disabled={!event.title.trim() && event.evidenceIds.length === 0}
-                  className="text-xs font-medium text-slate-600 underline decoration-dotted hover:text-slate-900 disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
+                  className="text-xs font-medium text-brand-700 underline decoration-dotted hover:text-brand-900 disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
                 >
                   Auto-write from exhibits
                 </button>
@@ -253,7 +253,7 @@ export default function TimelinePage({ params }: { params: Promise<{ id: string 
                   if (e.target.value !== event.description) patchEvent(event.id, { description: e.target.value });
                 }}
                 rows={2}
-                className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+                className="mt-1 w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </li>
           ))

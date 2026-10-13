@@ -2,9 +2,12 @@ import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { DISPUTE_TYPES } from "@/lib/types";
 import type { Case, Evidence, TimelineEvent } from "@/lib/types";
 
-const NAVY = "#0f172a";
-const NAVY_SOFT = "#334155";
-const BORDER = "#e2e8f0";
+// Matches the app's brand-900/brand-700/brand-50 tokens (see globals.css) so
+// the exported PDF - the document people actually submit - carries the same
+// trust-blue identity as the product, rather than a plain black/gray.
+const NAVY = "#122040";
+const NAVY_SOFT = "#3c5a8f";
+const BORDER = "#dbe6f4";
 
 const styles = StyleSheet.create({
   page: {
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
   noticeBox: {
     marginTop: 18,
     padding: 12,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#eef3fa",
     borderRadius: 4,
     color: NAVY_SOFT,
     lineHeight: 1.5,

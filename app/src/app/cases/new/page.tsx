@@ -53,7 +53,7 @@ export default function NewCasePage() {
     <div className="flex min-h-full flex-col">
       <SiteHeader />
       <main className="mx-auto w-full max-w-xl flex-1 px-6 py-14">
-        <h1 className="text-2xl font-bold text-slate-900">Create your evidence pack</h1>
+        <h1 className="text-2xl font-bold text-brand-950">Create your evidence pack</h1>
         <p className="mt-2 text-sm text-slate-600">
           Start with the basics. You&apos;ll upload evidence and build the timeline next.
         </p>
@@ -65,7 +65,7 @@ export default function NewCasePage() {
             <select
               value={type}
               onChange={(e) => setType(e.target.value as DisputeType)}
-              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               {DISPUTE_TYPES.map((d) => (
                 <option key={d.value} value={d.value}>
@@ -87,7 +87,7 @@ export default function NewCasePage() {
               onChange={(e) => setMerchantName(e.target.value)}
               placeholder="e.g. AudioGearDirect"
               required
-              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
 
@@ -100,7 +100,7 @@ export default function NewCasePage() {
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               placeholder="e.g. Pakistan, United States, United Kingdom"
-              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
 
@@ -113,7 +113,7 @@ export default function NewCasePage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Order #4471 never delivered"
-              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+              className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
 
@@ -125,7 +125,7 @@ export default function NewCasePage() {
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value.toUpperCase())}
                 maxLength={3}
-                className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm uppercase focus:border-slate-500 focus:outline-none"
+                className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm uppercase focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
             <div>
@@ -138,7 +138,7 @@ export default function NewCasePage() {
                 step="0.01"
                 min="0"
                 placeholder="0.00"
-                className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                className="mt-1.5 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function NewCasePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-md bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+            className="w-full rounded-md bg-brand-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-800 disabled:opacity-60"
           >
             {submitting ? "Creating..." : "Continue to upload evidence"}
           </button>

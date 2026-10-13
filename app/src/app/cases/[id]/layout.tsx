@@ -23,10 +23,10 @@ export default async function CaseLayout({
       <SiteHeader />
       <div className="border-b border-slate-200 bg-slate-50">
         <div className="mx-auto max-w-4xl px-6 py-5">
-          <Link href="/cases" className="text-xs font-medium text-slate-500 hover:text-slate-700">
+          <Link href="/cases" className="text-xs font-medium text-slate-500 hover:text-brand-700">
             ← My Cases
           </Link>
-          <h1 className="mt-1 text-xl font-bold text-slate-900">{details.case.title}</h1>
+          <h1 className="mt-1 text-xl font-bold text-brand-950">{details.case.title}</h1>
         </div>
         <div className="mx-auto max-w-4xl px-6">
           <CaseTabs caseId={id} />

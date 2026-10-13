@@ -26,10 +26,10 @@ export default function Home() {
 
       <main className="flex-1">
         <section className="mx-auto max-w-4xl px-6 pb-16 pt-20 text-center">
-          <p className="mb-4 text-sm font-medium uppercase tracking-widest text-slate-500">
+          <p className="mb-4 text-sm font-medium uppercase tracking-widest text-brand-600">
             Online Purchase &amp; Payment Dispute
           </p>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight text-brand-950 sm:text-5xl">
             Turn scattered evidence into one clear dispute pack
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
@@ -39,7 +39,7 @@ export default function Home() {
           <div className="mt-8 flex items-center justify-center gap-3">
             <Link
               href="/cases/new"
-              className="rounded-md bg-slate-900 px-6 py-3 text-base font-medium text-white hover:bg-slate-800"
+              className="rounded-md bg-brand-700 px-6 py-3 text-base font-medium text-white hover:bg-brand-800"
             >
               Create My Evidence Pack
             </Link>
@@ -58,10 +58,10 @@ export default function Home() {
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((step, i) => (
                 <div key={step.title} className="rounded-lg border border-slate-200 bg-white p-5">
-                  <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
+                  <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-brand-700 text-sm font-semibold text-white">
                     {i + 1}
                   </div>
-                  <h3 className="font-semibold text-slate-900">{step.title}</h3>
+                  <h3 className="font-semibold text-brand-950">{step.title}</h3>
                   <p className="mt-1 text-sm text-slate-600">{step.desc}</p>
                 </div>
               ))}
@@ -72,37 +72,37 @@ export default function Home() {
         <section className="mx-auto max-w-5xl px-6 py-14">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900">What you upload</h2>
+              <h2 className="text-xl font-semibold text-brand-950">What you upload</h2>
               <ul className="mt-4 space-y-2 text-sm text-slate-600">
                 {UPLOADS.map((item) => (
                   <li key={item} className="flex gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-slate-900">What you receive</h2>
+              <h2 className="text-xl font-semibold text-brand-950">What you receive</h2>
               <ul className="mt-4 space-y-2 text-sm text-slate-600">
                 <li className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
                   Case summary with transaction amount and issue type
                 </li>
                 <li className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
                   Chronological event timeline
                 </li>
                 <li className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
                   Evidence index with Exhibit A, B, C labels
                 </li>
                 <li className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
                   Clean attachment pages with captions
                 </li>
                 <li className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
                   One professional PDF ready for submission or record keeping
                 </li>
               </ul>

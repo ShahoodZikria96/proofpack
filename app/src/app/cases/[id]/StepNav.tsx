@@ -15,7 +15,7 @@ export function StepNav({ caseId }: { caseId: string }) {
   return (
     <div className="mt-10 flex items-center justify-between border-t border-slate-200 pt-6">
       {prev ? (
-        <Link href={`/cases/${caseId}/${prev.slug}`} className="text-sm font-medium text-slate-600 hover:text-slate-900">
+        <Link href={`/cases/${caseId}/${prev.slug}`} className="text-sm font-medium text-slate-600 hover:text-brand-800">
           ← Back to {prev.label}
         </Link>
       ) : (
@@ -24,7 +24,7 @@ export function StepNav({ caseId }: { caseId: string }) {
       {next ? (
         <Link
           href={`/cases/${caseId}/${next.slug}`}
-          className="rounded-md bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-800"
+          className="rounded-md bg-brand-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-800"
         >
           Next: {next.label} →
         </Link>

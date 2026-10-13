@@ -5,9 +5,12 @@ import { updateCase } from "@/lib/store";
 import type { Evidence } from "@/lib/types";
 import { FrontMatter } from "./FrontMatter";
 
-const NAVY = rgb(15 / 255, 23 / 255, 42 / 255);
-const SLATE = rgb(71 / 255, 85 / 255, 105 / 255);
-const LIGHT = rgb(148 / 255, 163 / 255, 177 / 255);
+// Matches the app's brand-900/brand-500 tokens (see globals.css). LIGHT is a
+// muted blue-gray (not full brand-300) since it's used for de-emphasized
+// text like footers - it should recede, not draw the eye.
+const NAVY = rgb(18 / 255, 32 / 255, 64 / 255);
+const SLATE = rgb(60 / 255, 90 / 255, 143 / 255);
+const LIGHT = rgb(146 / 255, 166 / 255, 198 / 255);
 
 const [PAGE_W, PAGE_H] = PageSizes.A4;
 const MARGIN = 48;
@@ -107,7 +110,7 @@ async function addUnsupportedPreviewPage(
   });
 }
 
-const BAND_BG = rgb(241 / 255, 245 / 255, 249 / 255);
+const BAND_BG = rgb(238 / 255, 243 / 255, 250 / 255); // brand-50
 
 /**
  * Labels a copied page from an original evidence PDF without spending a whole
