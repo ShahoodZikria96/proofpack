@@ -55,8 +55,10 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
         be in the final pack.
       </p>
       <p className="mt-1 text-xs text-slate-500">
-        We&apos;ve pre-filled a label and caption for each file from its filename — edit them to say what the file
-        actually shows.
+        We&apos;ve pre-filled a label and caption from each filename where it was descriptive. Files named by your
+        camera, scanner or chat app (like IMG_2049.jpg or a WhatsApp export) are left blank and marked{" "}
+        <span className="font-medium text-amber-700">Needs caption</span> below — just write one short line saying
+        what the file shows.
       </p>
 
       {details.evidence.length === 0 ? (
@@ -74,7 +76,9 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-xs font-medium text-slate-500">PDF</span>
+                  <span className="text-xs font-medium text-slate-500">
+                    {ev.fileType === "application/pdf" ? "PDF" : "DOC"}
+                  </span>
                 )}
               </div>
 
@@ -91,6 +95,11 @@ export default function ExhibitsPage({ params }: { params: Promise<{ id: string 
                     className="w-16 rounded border border-slate-300 px-2 py-1 text-sm font-semibold"
                   />
                   <span className="truncate text-sm text-slate-700">{ev.originalName}</span>
+                  {!ev.caption.trim() && (
+                    <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+                      Needs caption
+                    </span>
+                  )}
                   <span className="ml-auto flex items-center gap-1 text-xs">
                     <button
                       onClick={() => move(index, -1)}

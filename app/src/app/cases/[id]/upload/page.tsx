@@ -4,7 +4,8 @@ import { use, useCallback, useEffect, useRef, useState } from "react";
 import type { CaseWithDetails } from "@/lib/types";
 import { StepNav } from "../StepNav";
 
-const ACCEPT = "image/jpeg,image/png,image/webp,application/pdf";
+const ACCEPT =
+  "image/jpeg,image/png,image/webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 export default function UploadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -59,8 +60,12 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
     <div>
       <h2 className="text-lg font-semibold text-slate-900">Upload evidence</h2>
       <p className="mt-1 text-sm text-slate-600">
-        Order confirmations, receipts, chats, emails, tracking screenshots or photos. JPG, PNG, WEBP or PDF, up to
-        20MB each.
+        Order confirmations, receipts, chats, emails, tracking screenshots or photos — WhatsApp screenshots work
+        fine too. JPG, PNG, WEBP, PDF or Word (.doc/.docx), up to 20MB each.
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        Word documents are kept with your case and listed in the evidence index, but can&apos;t be shown inline in
+        the exported PDF — if you need it to appear as a page in the pack, save it as a PDF before uploading.
       </p>
       <p className="mt-1 text-xs text-slate-500">
         Each file you add automatically gets a caption and a timeline entry so you&apos;re never starting from a
@@ -87,7 +92,7 @@ export default function UploadPage({ params }: { params: Promise<{ id: string }>
         <p className="text-sm font-medium text-slate-700">
           {uploading ? "Uploading..." : "Click to choose files or drag and drop"}
         </p>
-        <p className="mt-1 text-xs text-slate-400">JPG, PNG, WEBP, PDF</p>
+        <p className="mt-1 text-xs text-slate-400">JPG, PNG, WEBP, PDF, DOC, DOCX</p>
         <input
           ref={inputRef}
           type="file"

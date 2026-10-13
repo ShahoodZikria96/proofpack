@@ -198,6 +198,17 @@ export async function buildExportPdf(caseId: string): Promise<Buffer | null> {
       } catch {
         await addUnsupportedPreviewPage(pdfDoc, font, boldFont, evidence, "The original PDF file could not be read.");
       }
+    } else if (
+      evidence.fileType === "application/msword" ||
+      evidence.fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      await addUnsupportedPreviewPage(
+        pdfDoc,
+        font,
+        boldFont,
+        evidence,
+        "This Word document can't be shown inline here. Save it as a PDF and re-upload to include its content."
+      );
     } else {
       await addUnsupportedPreviewPage(pdfDoc, font, boldFont, evidence);
     }

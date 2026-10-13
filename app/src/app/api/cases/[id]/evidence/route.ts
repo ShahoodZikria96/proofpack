@@ -2,7 +2,14 @@ import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { addEvidence } from "@/lib/store";
 
-const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "application/pdf"]);
+const ACCEPTED_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]);
 const MAX_FILE_BYTES = 20 * 1024 * 1024; // 20MB
 
 function sanitizeName(name: string) {
